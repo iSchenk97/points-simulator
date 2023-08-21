@@ -63,7 +63,6 @@ def checkTeam(arrays, team):
                 break
     return resultList
 
-
 ## further data processing, forgot what this does
 def getData(tuple):
     newTuple = tuple[1:]
