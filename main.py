@@ -3,10 +3,12 @@ import csv
 import random
 from decimal import *
 
-RUNS = 5_000_000
-CUTOFF = 4
+RUNS = 1
+CUTOFF = 7
 PRECISION = 8
 
+# Cutoff = 7 # Winner gets 3000 PGC points
+# Write a tie breaker function!
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
@@ -25,12 +27,9 @@ def parse(filename):
 # assigns a random placement out of the array parsed from the points csv.
 def randomPlacements(teams, points):
     r = []
-    results = random.sample(points, k=24)
+    results = random.sample(points, k=21)
 
     for team in teams:
-        if team[0] == 'Acend':
-            r.append([team[0], 17, team[1]])
-            continue
         placement = results.pop()
         entry = [0, 0, 0]
         entry[0] = team[0]
@@ -210,10 +209,10 @@ def pgs(teams, points):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # pgs.csv is the list of teams and their current pgs points
-    teams = parse('pgs.csv')
+    #teams = parse('pgs.csv')
     # pgs2 is the list of placements and what amount of pgs points each team gets
-    points = parse('pgs2.csv')
+    #points = parse('pgs2.csv')
+    #pgs(teams, points)
+    teams = parse('pgc.csv')
+    points = parse('fall.csv')
     pgs(teams, points)
-    # teams = parse('pgc.csv')
-    # points = parse('fall.csv')
-    # pgc(teams, points) 
