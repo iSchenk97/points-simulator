@@ -3,7 +3,7 @@ import csv
 import random
 from decimal import *
 
-RUNS = 1
+RUNS = 1_000_000
 CUTOFF = 7
 PRECISION = 8
 
@@ -40,13 +40,75 @@ def randomPlacements(teams, points):
 
 
 # sorts the arrays by placement in the recent event
+
+def breakTie(sortedPlacements, i):
+    #print( i)
+    if i == len(sortedPlacements)-1:
+        return sortedPlacements
+    else:
+        #print("checking teams")
+        leftTeam = sortedPlacements[i]
+        rightTeam = sortedPlacements[i + 1]
+        #print(leftTeam)
+        #print(rightTeam)
+        if leftTeam[2] == rightTeam[2]:
+            #print("Tie: ")
+            #print(leftTeam, rightTeam)
+            if leftTeam[1] >= rightTeam[1]:
+                #print("left did worse")
+                #print(leftTeam[1], rightTeam[1])
+                # print(type(leftTeam[1]))
+                # print(type(rightTeam[1]))
+                buffer = leftTeam
+                sortedPlacements[i] = rightTeam
+                sortedPlacements[i + 1] = buffer
+                breakTie(sortedPlacements, i - 1)
+            else:
+                #print("right did worse")
+                breakTie(sortedPlacements,i+1)
+        else:
+            breakTie(sortedPlacements, i + 1)
+
+    return sortedPlacements
+
+def breakTie1(sortedPlacements):
+    #print( i)
+    i=0
+    while   i<len(sortedPlacements)-1:
+        #print(i)
+        #print("checking teams")
+        leftTeam = sortedPlacements[i]
+        rightTeam = sortedPlacements[i + 1]
+        #print(leftTeam)
+        #print(rightTeam)
+        if leftTeam[2] == rightTeam[2]:
+            #print("Tie: ")
+            #print(leftTeam, rightTeam)
+            if leftTeam[1] > rightTeam[1]:
+                #print("left did worse")
+                #print(leftTeam[1], rightTeam[1])
+                # print(type(leftTeam[1]))
+                # print(type(rightTeam[1]))
+                buffer = leftTeam
+                sortedPlacements[i] = rightTeam
+                sortedPlacements[i + 1] = buffer
+                i-=1
+                #breakTie(sortedPlacements, i - 1)
+            else:
+                #print("right did worse")
+                i+=1
+        else:
+            i+=1
+
+    return  sortedPlacements
+
 def sortPlacements(placements):
     def takeSecond(elem):
         return elem[2]
-
-    for team in placements:
-        sortedTeams = sorted(placements, key=takeSecond, reverse=True)
-        return sortedTeams
+    sortedTeams = sorted(placements, key=takeSecond, reverse=True)
+    #sortedPlacements=breakTie(sortedTeams,0)
+    sortedPlacements=breakTie1(sortedTeams)
+    return sortedPlacements
 
 
 # goes through one team, and filters out where they finished in the last tournament,
@@ -191,7 +253,9 @@ def pgs(teams, points):
     for i in range(RUNS):
         #print("Simulations run: ", i)
         placements = randomPlacements(teams, points)
-        sortedTeams = sortPlacements(placements)
+        sortedTeams: list
+        sortedTeams =sortPlacements(placements)
+        #print(sortedTeams)
         array.append(sortedTeams)
     allOdds = []
     for team in teams:
@@ -216,3 +280,4 @@ if __name__ == '__main__':
     teams = parse('pgc.csv')
     points = parse('fall.csv')
     pgs(teams, points)
+
